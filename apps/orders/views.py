@@ -88,6 +88,22 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = OrderListSerializer(pending_orders, many=True)
         return Response(serializer.data)
     
+    @action(detail=False, methods=['get'])
+    def order_stats(self, request):
+        """
+        Get order statistics.
+        """
+        total_orders = Order.objects.count()
+        total_revenue = Order.objects.filter(status='delivered').aggregate(
+            total=Sum('total_amount')
+        )['total'] or 0
+        
+        return Response({
+            'total_orders': total_orders,
+            'total_revenue': total_revenue,
+            'average_order_value': total_revenue / total_orders if total_orders > 0 else 0
+        })
+    
     @action(detail=True, methods=['post'])
     def update_status(self, request, pk=None):
         """

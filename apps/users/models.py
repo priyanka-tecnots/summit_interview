@@ -9,10 +9,10 @@ class User(AbstractUser):
     """
     email = models.EmailField(unique=True)
     phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+        regex=r'^\d{10}$',
+        message="Phone number must be exactly 10 digits."
     )
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    phone_number = models.CharField(validators=[phone_regex], max_length=10, blank=True)
     address = models.TextField(blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     
@@ -34,3 +34,8 @@ class User(AbstractUser):
     
     def is_active_customer(self):
         return self.is_active and self.is_customer
+    
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email
+        super().save(*args, **kwargs)

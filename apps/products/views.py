@@ -77,6 +77,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return super().get_queryset()
     
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        data['slug'] = data.get('name', '').lower().replace(' ', '-')
+        request.data = data
+        return super().create(request, *args, **kwargs)
+    
     @action(detail=False, methods=['get'])
     def active(self, request):
         """

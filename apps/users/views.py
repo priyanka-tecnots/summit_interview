@@ -92,6 +92,24 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserListSerializer(active_users, many=True)
         return Response(serializer.data)
     
+    @action(detail=False, methods=['get'])
+    def user_stats(self, request):
+        """
+        Get user statistics.
+        """
+        total_users = User.objects.count()
+        active_users = User.objects.filter(is_active=True).count()
+        customers = User.objects.filter(is_customer=True).count()
+        vendors = User.objects.filter(is_vendor=True).count()
+        
+        return Response({
+            'total_users': total_users,
+            'active_users': active_users,
+            'customers': customers,
+            'vendors': vendors,
+            'inactive_users': total_users - active_users
+        })
+    
     @action(detail=True, methods=['post'])
     def toggle_status(self, request, pk=None):
         """
