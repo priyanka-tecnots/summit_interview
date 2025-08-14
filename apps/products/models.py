@@ -29,7 +29,7 @@ class Product(models.Model):
     """
     name = models.CharField(max_length=200)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
     
@@ -47,6 +47,16 @@ class Product(models.Model):
     
     def get_vendor_name(self):
         return self.vendor.get_full_name()
+    
+    def get_price_display(self):
+        if self.price:
+            return f"${self.price}"
+        return "Price not available"
+    
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = f"SKU-{self.id or 'NEW'}-{self.name[:5].upper()}"
+        super().save(*args, **kwargs)
 
 
 class ProductReview(models.Model):

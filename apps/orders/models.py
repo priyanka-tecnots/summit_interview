@@ -31,6 +31,10 @@ class Order(models.Model):
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
+    def calculate_total(self):
+        self.total_amount = self.subtotal + self.tax_amount + self.shipping_cost
+        return self.total_amount
+    
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
