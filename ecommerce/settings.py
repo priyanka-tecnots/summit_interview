@@ -75,15 +75,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',          # Name of your database
-        'USER': 'myuser',              # PostgreSQL username
-        'PASSWORD': 'mypassword',      # PostgreSQL password
-        'HOST': 'localhost',           # Database host (e.g., 'localhost' or '127.0.0.1')
-        'PORT': '5432',                # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  
     }
 }
 
